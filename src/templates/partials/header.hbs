@@ -1,0 +1,17 @@
+<header class="bg-white shadow-sm">
+  <nav class="container mx-auto px-4 py-4">
+    <div class="flex justify-between items-center">
+      <a href="/" class="text-xl font-bold text-indigo-600">Book Management</a>
+      <div class="space-x-4">
+        {{#if user}}
+          <a href="/books" class="text-gray-700 hover:text-indigo-600">Books</a>
+          <a href="/profile" class="text-gray-700 hover:text-indigo-600">Profile</a>
+          <a href="/logout" class="text-gray-700 hover:text-indigo-600">Logout</a>
+        {{else}}
+          <a href="/login" class="text-gray-700 hover:text-indigo-600">Login</a>
+          <a href="/register" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Sign up</a>
+        {{/if}}
+      </div>
+    </div>
+  </nav>
+</header>

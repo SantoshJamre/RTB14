@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Listing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Custom styles can be added here */
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Main Content -->
+  <div class="py-1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col space-y-4 mb-8">
+        <!-- Search and Filter Bar -->
+        <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+            <!-- Search -->
+            <div class="col-span-1 md:col-span-1">
+              <label for="search" class="block text-sm font-medium text-gray-700 mb-1.5">Search</label>
+              <div class="relative">
+                <input type="text" id="search" placeholder="Search by title or author"
+                  class="w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 pr-10">
+                <button id="searchBtn"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-indigo-600 transition-colors">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Author Filter -->
+            <div>
+              <label for="authorFilter" class="block text-sm font-medium text-gray-700 mb-1.5">Author</label>
+              <select id="authorFilter"
+                class="w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                <option value="" class="text-gray-400">All Authors</option>
+                <!-- Will be populated by JavaScript -->
+              </select>
+            </div>
+
+            <!-- Category Filter -->
+            <div>
+              <label for="categoryFilter" class="block text-sm font-medium text-gray-700 mb-1.5">Category</label>
+              <select id="categoryFilter"
+                class="w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                <option value="" class="text-gray-400">All Categories</option>
+                <option value="Fiction" class="text-gray-900">Fiction</option>
+                <option value="Non-Fiction" class="text-gray-900">Non-Fiction</option>
+                <option value="Science" class="text-gray-900">Science</option>
+                <option value="Technology" class="text-gray-900">Technology</option>
+                <option value="Biography" class="text-gray-900">Biography</option>
+              </select>
+            </div>
+
+            <!-- Sort -->
+            <div>
+              <label for="sortBy" class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+              <div class="flex space-x-2">
+                <select id="sortBy"
+                  class="w-3/4 px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                  <option value="title" selected>Title</option>
+                  <option value="author">Author</option>
+                  <option value="published_date">Published Date</option>
+                  <option value="category">Category</option>
+                </select>
+                <select id="sortOrder"
+                  class="w-1/4 px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                  <option value="ASC">Asc</option>
+                  <option value="DESC" selected>Desc</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex items-end">
+              <button id="addBookBtn"
+                class="w-full md:w-auto inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 transform hover:scale-[1.02]">
+                <i class="fas fa-plus mr-2"></i> Add New Book
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Book List Container -->
+      <div id="bookList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <!-- Books will be loaded here dynamically -->
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination"
+        class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg">
+        <div class="flex flex-1 justify-between sm:hidden">
+          <button id="prevPageMobile"
+            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            Previous
+          </button>
+          <button id="nextPageMobile"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            Next
+          </button>
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+          <div>
+            <p id="paginationInfo" class="text-sm text-gray-700">
+              Showing <span id="startItem" class="font-medium">1</span> to <span id="endItem"
+                class="font-medium">10</span> of <span id="totalItems" class="font-medium">0</span> results
+            </p>
+          </div>
+          <div>
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+              <button id="firstPage"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">First</span>
+                <i class="fas fa-angle-double-left h-5 w-5"></i>
+              </button>
+              <button id="prevPage"
+                class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">Previous</span>
+                <i class="fas fa-chevron-left h-5 w-5"></i>
+              </button>
+              <div id="pageNumbers" class="flex">
+                <!-- Page numbers will be inserted here -->
+              </div>
+              <button id="nextPage"
+                class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">Next</span>
+                <i class="fas fa-chevron-right h-5 w-5"></i>
+              </button>
+              <button id="lastPage"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">Last</span>
+                <i class="fas fa-angle-double-right h-5 w-5"></i>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Book Modal -->
+      <div id="createBookModal"
+        class="fixed inset-0 z-50 flex items-start justify-start pt-4 pb-8 overflow-y-auto bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto my-8">
+          <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Add New Book</h3>
+            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form id="createBookForm" class="p-6 space-y-5 pb-20">
+            <div class="space-y-1">
+              <label for="title" class="block text-sm font-medium text-gray-700">Title <span class="text-red-500">*</span></label>
+              <input type="text" id="title" name="title" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="author" class="block text-sm font-medium text-gray-700">Author <span class="text-red-500">*</span></label>
+              <input type="text" id="author" name="author" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="pdfUrl" class="block text-sm font-medium text-gray-700">PDF URL</label>
+              <input type="text" id="pdfUrl" name="pdf_url" placeholder="https://example.com/book.pdf"
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="publishedDate" class="block text-sm font-medium text-gray-700">Published Date</label>
+              <input type="date" id="publishedDate" name="published_date" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+              <select id="category" name="category"
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                <option value="" class="text-gray-400">Select a category</option>
+                <option value="Fiction" class="text-gray-900">Fiction</option>
+                <option value="Non-Fiction" class="text-gray-900">Non-Fiction</option>
+                <option value="Science" class="text-gray-900">Science</option>
+                <option value="Technology" class="text-gray-900">Technology</option>
+                <option value="Biography" class="text-gray-900">Biography</option>
+              </select>
+            </div>
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+              <button type="button" id="cancelBtn"
+                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+              </button>
+              <button type="submit"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Save Book
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Book Modal -->
+      <div id="editBookModal"
+        class="fixed inset-0 z-50 flex items-start justify-start pt-4 pb-8 overflow-y-auto bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto my-8">
+          <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Edit Book</h3>
+            <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form id="editBookForm" class="p-6 space-y-5 pb-20">
+            <input type="hidden" id="editBookId">
+            <div class="space-y-1">
+              <label for="editTitle" class="block text-sm font-medium text-gray-700">Title <span class="text-red-500">*</span></label>
+              <input type="text" id="editTitle" name="title" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="editAuthor" class="block text-sm font-medium text-gray-700">Author <span class="text-red-500">*</span></label>
+              <input type="text" id="editAuthor" name="author" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="editPdfUrl" class="block text-sm font-medium text-gray-700">PDF URL</label>
+              <input type="text" id="editPdfUrl" name="pdf_url"
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="editPublishedDate" class="block text-sm font-medium text-gray-700">Published Date</label>
+              <input type="date" id="editPublishedDate" name="published_date" required
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200">
+            </div>
+            <div class="space-y-1">
+              <label for="editCategory" class="block text-sm font-medium text-gray-700">Category</label>
+              <select id="editCategory" name="category"
+                class="mt-1 block w-full px-4 py-2.5 bg-gray-50 rounded-lg border-0 text-gray-900 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 appearance-none bg-[url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")] bg-no-repeat bg-[length:1.5rem] bg-[right_0.5rem_center]">
+                <option value="" class="text-gray-400">Select a category</option>
+                <option value="Fiction" class="text-gray-900">Fiction</option>
+                <option value="Non-Fiction" class="text-gray-900">Non-Fiction</option>
+                <option value="Science" class="text-gray-900">Science</option>
+                <option value="Technology" class="text-gray-900">Technology</option>
+                <option value="Biography" class="text-gray-900">Biography</option>
+              </select>
+            </div>
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+              <button type="button" id="cancelEditBtn"
+                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+              </button>
+              <button type="submit"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Update Book
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-4 right-4 z-50 p-4 max-w-sm w-full bg-white rounded-lg shadow-lg border border-gray-200 transform transition-all duration-300 translate-x-full">
+    <div class="flex items-start">
+      <div id="toastIcon" class="flex-shrink-0"></div>
+      <div class="ml-3 w-0 flex-1 pt-0.5">
+        <p id="toastMessage" class="text-sm font-medium text-gray-900"></p>
+      </div>
+      <div class="ml-4 flex-shrink-0 flex">
+        <button id="closeToast" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toast notification functions
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      // Set message and icon based on type
+      toastMessage.textContent = message;
+      
+      if (type === 'success') {
+        toastIcon.innerHTML = '<i class="h-6 w-6 text-green-500 fas fa-check-circle"></i>';
+        toast.classList.remove('bg-red-50', 'border-red-200');
+        toast.classList.add('bg-green-50', 'border-green-200');
+      } else {
+        toastIcon.innerHTML = '<i class="h-6 w-6 text-red-500 fas fa-exclamation-circle"></i>';
+        toast.classList.remove('bg-green-50', 'border-green-200');
+        toast.classList.add('bg-red-50', 'border-red-200');
+      }
+      
+      // Show toast
+      toast.classList.remove('translate-x-full');
+      toast.classList.add('translate-x-0');
+      
+      // Auto-hide after 5 seconds
+      setTimeout(hideToast, 5000);
+    }
+    
+    function hideToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('translate-x-full');
+      toast.classList.remove('translate-x-0');
+    }
+    
+    // Close toast button
+    document.getElementById('closeToast')?.addEventListener('click', hideToast);
+
+    // Utility function to handle API requests with token refresh
+    async function fetchWithAuth(url, options = {}) {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+      // Add authorization header if token exists
+      if (userData?.authToken?.accessToken) {
+        options.headers = {
+          ...options.headers,
+          'Authorization': `Bearer ${userData.authToken.accessToken}`
+        };
+      }
+
+      let response = await fetch(url, options);
+
+      // If token expired, try to refresh it
+      if (response.status === 401) {
+        try {
+          const refreshResponse = await fetch('/api/user/refresh-token', {
+            method: 'get',
+            headers: {
+              'Authorization': `Bearer ${userData.authToken?.refreshToken || ''}`
+            }
+          });
+
+          if (!refreshResponse.ok) {
+            // If refresh token is invalid, log out the user
+            localStorage.removeItem('userData');
+            window.location.href = '/login';
+            return Promise.reject('Session expired. Please log in again.');
+          }
+
+          const { data } = await refreshResponse.json();
+          // Update the stored tokens
+          const updatedUserData = { ...userData, authToken: data };
+          localStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+          // Retry the original request with the new token
+          options.headers = {
+            ...options.headers,
+            'Authorization': `Bearer ${data.accessToken}`
+          };
+          response = await fetch(url, options);
+        } catch (error) {
+          logger.error('Token refresh failed:', { error: error.message });
+          localStorage.removeItem('userData');
+          window.location.href = '/login';
+          return Promise.reject('Session expired. Please log in again.');
+        }
+      }
+
+      return response;
+    }
+
+    // Global function to open edit modal
+    async function openEditModal(bookId) {
+      const editModal = document.getElementById('editBookModal');
+      const editBookForm = document.getElementById('editBookForm');
+
+      try {
+        const response = await fetchWithAuth(`/api/books/${bookId}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch book details');
+        }
+
+        const { data: book } = await response.json();
+
+        // Populate the edit form
+        document.getElementById('editBookId').value = book.id;
+        document.getElementById('editTitle').value = book.title || '';
+        document.getElementById('editAuthor').value = book.author || '';
+        document.getElementById('editPdfUrl').value = book.pdf_url || '';
+        document.getElementById('editPublishedDate').value = book.published_date ? book.published_date.split('T')[0] : '';
+        document.getElementById('editCategory').value = book.category || '';
+
+        // Show the edit modal
+        editModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+      } catch (error) {
+        logger.error('Error fetching book details:', { error: error.message });
+        alert('Failed to load book details. Please try again.');
+      }
+    }
+
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get DOM elements
+      const modal = document.getElementById('createBookModal');
+      const editModal = document.getElementById('editBookModal');
+      const addBookBtn = document.getElementById('addBookBtn');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+      const createBookForm = document.getElementById('createBookForm');
+      const editBookForm = document.getElementById('editBookForm');
+      const bookList = document.getElementById('bookList');
+      const searchInput = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const authorFilter = document.getElementById('authorFilter');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const sortBy = document.getElementById('sortBy');
+      const sortOrder = document.getElementById('sortOrder');
+      const pagination = document.getElementById('pagination');
+
+      // Pagination elements
+      const prevPageBtn = document.getElementById('prevPage');
+      const nextPageBtn = document.getElementById('nextPage');
+      const firstPageBtn = document.getElementById('firstPage');
+      const lastPageBtn = document.getElementById('lastPage');
+      const prevPageMobileBtn = document.getElementById('prevPageMobile');
+      const nextPageMobileBtn = document.getElementById('nextPageMobile');
+      const pageNumbersContainer = document.getElementById('pageNumbers');
+      const startItem = document.getElementById('startItem');
+      const endItem = document.getElementById('endItem');
+      const totalItems = document.getElementById('totalItems');
+
+      // State
+      let currentPage = 1;
+      let totalPages = 1;
+      let allAuthors = [];
+      const limit = 10;
+      let loading = false;
+
+      // Open modal function
+      function openModal() {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      // Close modal function
+      function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        createBookForm.reset();
+      }
+
+      // Open edit modal function
+      async function openEditModal(bookId) {
+        try {
+          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+          const response = await fetch(`/api/books/${bookId}`, {
+            headers: {
+              'Authorization': `Bearer ${userData.authToken?.accessToken}`
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch book details');
+          }
+
+          const { data: book } = await response.json();
+
+          // Populate the edit form
+          document.getElementById('editBookId').value = book.id;
+          document.getElementById('editTitle').value = book.title || '';
+          document.getElementById('editAuthor').value = book.author || '';
+          document.getElementById('editPdfUrl').value = book.pdf_url || '';
+          document.getElementById('editPublishedDate').value = book.published_date ? book.published_date.split('T')[0] : '';
+          document.getElementById('editCategory').value = book.category || '';
+
+          // Show the edit modal
+          editModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+
+        } catch (error) {
+          logger.error('Error fetching book details:', { error: error.message });
+          alert('Failed to load book details. Please try again.');
+        }
+      }
+
+      // Close edit modal function
+      function closeEditModal() {
+        editModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        editBookForm.reset();
+      }
+
+      // Event listeners for create modal
+      if (addBookBtn) addBookBtn.addEventListener('click', openModal);
+      if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+      if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+      // Event listeners for edit modal
+      if (closeEditModalBtn) closeEditModalBtn.addEventListener('click', closeEditModal);
+      if (cancelEditBtn) cancelEditBtn.addEventListener('click', closeEditModal);
+
+      // Close modals when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        } else if (e.target === editModal) {
+          closeEditModal();
+        }
+      });
+
+      // Close modals with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (!modal.classList.contains('hidden')) {
+            closeModal();
+          } else if (!editModal.classList.contains('hidden')) {
+            closeEditModal();
+          }
+        }
+      });
+
+      // Handle create form submission
+      if (createBookForm) {
+        createBookForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(createBookForm);
+          const data = Object.fromEntries(formData.entries());
+          const submitBtn = createBookForm.querySelector('button[type="submit"]');
+          const originalBtnText = submitBtn.innerHTML;
+
+          try {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+
+            const response = await fetchWithAuth('/api/books', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Failed to create book');
+            }
+
+            showToast('Book created successfully!', 'success');
+            closeModal();
+            loadBooks();
+          } catch (error) {
+            console.error('Create book error:', error);
+            showToast(error.message || 'Failed to create book. Please try again.', 'error');
+          } finally {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+        });
+      }
+
+      // Handle edit form submission
+      if (editBookForm) {
+        editBookForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const bookId = document.getElementById('editBookId').value;
+          const formData = new FormData(editBookForm);
+          const data = Object.fromEntries(formData.entries());
+          const submitBtn = editBookForm.querySelector('button[type="submit"]');
+          const originalBtnText = submitBtn.innerHTML;
+
+          try {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Updating...';
+
+            const response = await fetchWithAuth(`/api/books/${bookId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Failed to update book');
+            }
+
+            showToast('Book updated successfully!', 'success');
+            closeEditModal();
+            loadBooks();
+          } catch (error) {
+            console.error('Update book error:', error);
+            showToast(error.message || 'Failed to update book. Please try again.', 'error');
+          } finally {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+        });
+      }
+
+      // Build query parameters from filters
+      function buildQueryParams() {
+        const params = new URLSearchParams();
+
+        // Add search term if exists
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm) params.append('search', searchTerm);
+
+        // Add filters
+        if (authorFilter.value) params.append('author', authorFilter.value);
+        if (categoryFilter.value) params.append('category', categoryFilter.value);
+
+        // Add sorting
+        params.append('sortBy', sortBy.value);
+        params.append('sortOrder', sortOrder.value);
+
+        // Add pagination
+        params.append('page', currentPage);
+        params.append('limit', limit);
+
+        return params.toString();
+      }
+
+      // Update pagination controls
+      function updatePagination(total, current, perPage) {
+        totalPages = Math.ceil(total / perPage);
+
+        // Update pagination info
+        const start = ((current - 1) * perPage) + 1;
+        const end = Math.min(current * perPage, total);
+
+        startItem.textContent = start;
+        endItem.textContent = end;
+        totalItems.textContent = total;
+
+        // Update pagination buttons
+        prevPageBtn.disabled = current === 1;
+        nextPageBtn.disabled = current >= totalPages;
+        firstPageBtn.disabled = current === 1;
+        lastPageBtn.disabled = current >= totalPages;
+        prevPageMobileBtn.disabled = current === 1;
+        nextPageMobileBtn.disabled = current >= totalPages;
+
+        // Update page numbers
+        updatePageNumbers(current, totalPages);
+      }
+
+      // Update page numbers in pagination
+      function updatePageNumbers(current, total) {
+        pageNumbersContainer.innerHTML = '';
+
+        // Always show first page
+        addPageNumber(1, current);
+
+        // Calculate range of pages to show
+        let start = Math.max(2, current - 1);
+        let end = Math.min(total - 1, current + 1);
+
+        // Adjust if we're near the start or end
+        if (current <= 3) {
+          end = Math.min(4, total - 1);
+        } else if (current >= total - 2) {
+          start = Math.max(total - 3, 2);
+        }
+
+        // Add ellipsis if needed
+        if (start > 2) {
+          pageNumbersContainer.innerHTML += '<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700">...</span>';
+        }
+
+        // Add middle pages
+        for (let i = start; i <= end; i++) {
+          addPageNumber(i, current);
+        }
+
+        // Add ellipsis if needed
+        if (end < total - 1) {
+          pageNumbersContainer.innerHTML += '<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700">...</span>';
+        }
+
+        // Always show last page if there is more than one page
+        if (total > 1) {
+          addPageNumber(total, current);
+        }
+      }
+
+      // Helper to add a page number button
+      function addPageNumber(page, current) {
+        const button = document.createElement('button');
+        button.textContent = page;
+        button.className = `relative inline-flex items-center px-4 py-2 text-sm font-semibold ${page === current
+            ? 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0'
+          }`;
+        button.dataset.page = page;
+        pageNumbersContainer.appendChild(button);
+      }
+
+      // Load books function with pagination and filters
+      async function loadBooks() {
+        if (!bookList || loading) return;
+
+        loading = true;
+        bookList.innerHTML = '<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i><p class="mt-2">Loading books...</p></div>';
+
+        try {
+          const queryParams = new URLSearchParams({
+            page: currentPage,
+            limit: limit,
+            sortBy: sortBy.value,
+            sortOrder: sortOrder.value,
+            ...(searchInput.value.trim() && { search: searchInput.value.trim() }),
+            ...(authorFilter.value && { author: authorFilter.value }),
+            ...(categoryFilter.value && { category: categoryFilter.value })
+          }).toString();
+
+          const response = await fetchWithAuth(`/api/books?${queryParams}`);
+
+          if (!response.ok) {
+            throw new Error('Failed to load books');
+          }
+
+          const { data } = await response.json();
+          const { books, pagination: paginationData } = data || { books: [] };
+
+          // Update authors dropdown if it's empty
+          if (allAuthors.length === 0 && books.length > 0) {
+            // Get unique authors
+            const authors = [...new Set(books.map(book => book.author).filter(Boolean))];
+            allAuthors = authors;
+
+            // Populate authors dropdown
+            authors.forEach(author => {
+              const option = document.createElement('option');
+              option.value = author;
+              option.textContent = author;
+              authorFilter.appendChild(option);
+            });
+          }
+
+          if (books.length === 0) {
+            bookList.innerHTML = `
+              <div class="col-span-full text-center py-10">
+                <i class="fas fa-book-open text-5xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500">No books found matching your criteria.</p>
+              </div>
+            `;
+
+            // Reset pagination
+            updatePagination(0, 1, limit);
+            return;
+          }
+
+          // Update book list
+          bookList.innerHTML = books.map(book => `
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <div class="h-48 bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-book text-5xl text-gray-400"></i>
+              </div>
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-900 mb-1">${book.title || 'Untitled'}</h3>
+                <p class="text-gray-600 text-sm mb-1">By ${book.author || 'Unknown'}</p>
+                ${book.published_date ? `<p class="text-gray-500 text-xs mb-1">Published: ${new Date(book.published_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
+                ${book.category ? `<p class="text-gray-500 text-xs mb-2">${book.category}</p>` : ''}
+                <div class="flex justify-between items-center mt-2">
+                  <div>
+                    <button onclick="openEditModal('${book.id}')" class="text-sm text-indigo-600 hover:text-indigo-800">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('');
+
+          // Update pagination
+          if (paginationData) {
+            const totalItems = paginationData.totalBooks || 0;
+            const currentPage = paginationData.currentPage || 1;
+            const perPage = paginationData.limit || 10;
+            const totalPages = paginationData.totalPages || 1;
+
+            // Update pagination info
+            const startItem = ((currentPage - 1) * perPage) + 1;
+            const endItem = Math.min(currentPage * perPage, totalItems);
+
+            // Only update the display if we have items
+            if (totalItems > 0) {
+              document.getElementById('startItem').textContent = startItem;
+              document.getElementById('endItem').textContent = endItem;
+              document.getElementById('totalItems').textContent = totalItems;
+
+              // Update pagination controls
+              updatePageNumbers(currentPage, totalPages);
+
+              // Enable/disable pagination buttons based on API response
+              document.getElementById('firstPage').disabled = currentPage === 1;
+              document.getElementById('prevPage').disabled = currentPage === 1;
+              document.getElementById('nextPage').disabled = !paginationData.hasNext;
+              document.getElementById('lastPage').disabled = !paginationData.hasNext;
+
+              document.getElementById('prevPageMobile').disabled = currentPage === 1;
+              document.getElementById('nextPageMobile').disabled = !paginationData.hasNext;
+            } else {
+              // No items found
+              document.getElementById('startItem').textContent = '0';
+              document.getElementById('endItem').textContent = '0';
+              document.getElementById('totalItems').textContent = '0';
+
+              // Disable all pagination buttons
+              ['firstPage', 'prevPage', 'nextPage', 'lastPage', 'prevPageMobile', 'nextPageMobile'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = true;
+              });
+            }
+          }
+
+        } catch (error) {
+          logger.error('Error loading books:', { error: error.message });
+          bookList.innerHTML = `
+            <div class="col-span-full text-center py-10">
+              <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+              <p class="text-red-500">Failed to load books. Please try again later.</p>
+              <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Retry
+              </button>
+            </div>
+          `;
+        } finally {
+          loading = false;
+        }
+      }
+
+      // Event listeners for search, filters, and sorting
+      function setupEventListeners() {
+        // Search input (debounced)
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            loadBooks();
+          }, 500);
+        });
+
+        // Search button
+        searchBtn.addEventListener('click', () => {
+          currentPage = 1;
+          loadBooks();
+        });
+
+        // Author filter
+        authorFilter.addEventListener('change', () => {
+          currentPage = 1;
+          loadBooks();
+        });
+
+        // Category filter
+        categoryFilter.addEventListener('change', () => {
+          currentPage = 1;
+          loadBooks();
+        });
+        
+        // Sort by
+        sortBy.addEventListener('change', () => {
+          currentPage = 1;
+          loadBooks();
+        });
+        
+        // Sort order
+        sortOrder.addEventListener('change', () => {
+          currentPage = 1;
+          loadBooks();
+        });
+
+        // Pagination buttons
+        prevPageBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            loadBooks();
+          }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            loadBooks();
+          }
+        });
+
+        firstPageBtn.addEventListener('click', () => {
+          if (currentPage !== 1) {
+            currentPage = 1;
+            loadBooks();
+          }
+        });
+
+        lastPageBtn.addEventListener('click', () => {
+          if (currentPage < totalPages) {
+            currentPage = totalPages;
+            loadBooks();
+          }
+        });
+
+        // Mobile pagination
+        prevPageMobileBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            loadBooks();
+          }
+        });
+
+        nextPageMobileBtn.addEventListener('click', () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            loadBooks();
+          }
+        });
+
+        // Page number clicks (delegated event)
+        pageNumbersContainer.addEventListener('click', (e) => {
+          if (e.target.tagName === 'BUTTON' && e.target.dataset.page) {
+            const page = parseInt(e.target.dataset.page);
+            if (page !== currentPage) {
+              currentPage = page;
+              loadBooks();
+            }
+          }
+        });
+      }
+
+      // Initialize sort controls from URL params if present
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('sortBy')) {
+        sortBy.value = urlParams.get('sortBy');
+      }
+      if (urlParams.has('sortOrder')) {
+        sortOrder.value = urlParams.get('sortOrder');
+      }
+
+      // Add event listeners
+      setupEventListeners();
+      loadBooks();
+    });
+  </script>
+</body>
+
+</html>
